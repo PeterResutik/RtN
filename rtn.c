@@ -674,7 +674,9 @@ realignIt(std::string seq, std::string qSeq, BWAWrapper &bwa, RefGenome &ref,  B
 
     // Ensure you get the sequences from the bam record; not seq and qSeq
     // (this accounts for the strand; bam alignments are always on the + strand)
-    string thisqSeq = it->QualitySequence();
+    // the realigned record carries no qualities (only the sequence was aligned):
+    // use the read's own, reversed when the hit is on the reverse strand
+    string thisqSeq = it->ReverseFlag() ? string(qSeq.rbegin(), qSeq.rend()) : qSeq;
     const char *qseqRaw = thisqSeq.c_str();
 
     string thisSeq = it->Sequence();
