@@ -703,7 +703,9 @@ realignIt(std::string seq, std::string qSeq, BWAWrapper &bwa, RefGenome &ref,  B
     // and pick the alignment that's "best" 
     if (! gotOne ||
         thisStat.numBases > stat.numBases || // aligned more bases
-        (thisStat.numBases == stat.numBases && thisStat.readLikelihood > stat.readLikelihood) // better alignment
+        (thisStat.numBases == stat.numBases &&
+         (opt.ignoreIndels ? thisStat.readLikelihood > stat.readLikelihood
+                           : thisStat.readLikelihoodWithIndels > stat.readLikelihoodWithIndels)) // better alignment, by the likelihood the decision uses
         ) {
       
       stat = thisStat;
