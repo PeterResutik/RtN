@@ -628,6 +628,10 @@ getWeightedMismatches(BamRecord &r, const char* seq, const char *ref, const char
         stat.meanIndelQuality += thisSumPhred;
           
       } else {
+        // indels are ignored: an inserted base still belongs to the aligned read, so a hit with an
+        // insertion is not passed over for a gapless hit that has mismatches instead
+        if (opt.ignoreIndels && t == 'I')
+          stat.numBases += len;
         seq += len;
         quals += len;
       }
